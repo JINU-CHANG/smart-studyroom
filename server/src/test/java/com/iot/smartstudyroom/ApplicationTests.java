@@ -1,4 +1,4 @@
-package com.IoT.smartstudyroom;
+package com.iot.smartstudyroom;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

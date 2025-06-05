@@ -1,4 +1,4 @@
-package com.IoT.smartstudyroom;
+package com.iot.smartstudyroom;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
