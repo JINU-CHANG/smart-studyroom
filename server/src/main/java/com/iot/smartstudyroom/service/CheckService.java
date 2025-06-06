@@ -2,6 +2,7 @@ package com.iot.smartstudyroom.service;
 
 import com.iot.smartstudyroom.domain.MemberSeat;
 import com.iot.smartstudyroom.repository.MemberSeatRepository;
+import com.iot.smartstudyroom.service.dto.InvalidUsageCheckRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;

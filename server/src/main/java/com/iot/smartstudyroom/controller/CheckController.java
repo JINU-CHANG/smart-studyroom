@@ -1,7 +1,7 @@
 package com.iot.smartstudyroom.controller;
 
 import com.iot.smartstudyroom.service.CheckService;
-import com.iot.smartstudyroom.service.InvalidUsageCheckRequest;
+import com.iot.smartstudyroom.service.dto.InvalidUsageCheckRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
