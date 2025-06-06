@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>스터디 카페</title>
+    <style>
+        .room, .seat {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .selected {
+            background-color: lightblue;
+        }
+        .info-box {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #888;
+        }
+    </style>
+</head>
+<body>
+<h1>스터디 카페</h1>
+
+<div id="roomContainer"></div>
+<div id="seatContainer"></div>
+<div id="infoContainer" class="info-box"></div>
+
+<script>
+    const data = [
+        {
+            name: "룸 1",
+            seats: [
+                { name: "좌석 1" },
+                { name: "좌석 2" },
+                { name: "좌석 3" }
+            ]
+        },
+        {
+            name: "룸 2",
+            seats: [
+                { name: "Seat 1" }
+            ]
+        }
+    ];
+
+    const roomContainer = document.getElementById("roomContainer");
+    const seatContainer = document.getElementById("seatContainer");
+    const infoContainer = document.getElementById("infoContainer");
+
+    let selectedRoomIndex = null;
+
+    data.forEach((room, roomIndex) => {
+        const roomDiv = document.createElement("div");
+        roomDiv.className = "room";
+        roomDiv.textContent = room.name;
+        roomDiv.addEventListener("click", () => showSeats(roomIndex));
+        roomContainer.appendChild(roomDiv);
+    });
+
+    function showSeats(roomIndex) {
+        selectedRoomIndex = roomIndex;
+        seatContainer.innerHTML = "";
+        infoContainer.innerHTML = "";
+
+        const seats = data[roomIndex].seats;
+        seats.forEach((seat, seatIndex) => {
+            const seatDiv = document.createElement("div");
+            seatDiv.className = "seat";
+            seatDiv.textContent = seat.name;
+            seatDiv.addEventListener("click", () => showSeatForm(roomIndex, seatIndex));
+            seatContainer.appendChild(seatDiv);
+        });
+    }
+
+    function showSeatForm(roomIndex, seatIndex) {
+        const seat = data[roomIndex].seats[seatIndex];
+        infoContainer.innerHTML = `
+        <h3>${seat.name} 예약</h3>
+        <label>시작 시간: <input type="time" id="startTime" /></label><br/><br/>
+        <label>종료 시간: <input type="time" id="endTime" /></label><br/><br/>
+        <button onclick="reserve(${roomIndex}, ${seatIndex})">예약</button>
+      `;
+    }
+
+    function reserve(roomIndex, seatIndex) {
+        const start = document.getElementById("startTime").value;
+        const end = document.getElementById("endTime").value;
+
+        if (!start || !end) {
+            alert("시작 시간과 종료 시간을 모두 선택해주세요.");
+            return;
+        }
+
+        const seat = data[roomIndex].seats[seatIndex];
+        console.log("예약 완료:", {
+            room: data[roomIndex].name,
+            seat: seat.name,
+            startTime: start,
+            endTime: end
+        });
+
+        infoContainer.innerHTML = `<strong>${seat.name}</strong> 예약 완료<br/>
+        시작: ${start}<br/>종료: ${end}`;
+    }
+</script>
+</body>
+</html>
