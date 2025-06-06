@@ -15,10 +15,15 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     private Room room;
+
+    public Seat(Integer id, Room room) {
+        this.id = id;
+        this.room = room;
+    }
 
     public Seat(Room room) {
         this.room = room;

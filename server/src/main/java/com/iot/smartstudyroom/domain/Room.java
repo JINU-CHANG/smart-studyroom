@@ -15,4 +15,8 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public Room(Long id) {
+        this.id = id;
+    }
 }

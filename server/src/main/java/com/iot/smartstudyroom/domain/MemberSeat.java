@@ -6,9 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -26,17 +25,21 @@ public class MemberSeat {
     @ManyToOne
     private Seat seat;
 
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
-    private LocalTime endTime;
+    private LocalDateTime endTime;
 
-    private LocalDate date;
-
-    public MemberSeat(Member member, Seat seat, LocalTime startTime, LocalTime endTime, LocalDate date) {
+    public MemberSeat(Member member, Seat seat, LocalDateTime startTime, LocalDateTime endTime) {
         this.member = member;
         this.seat = seat;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.date = date;
+    }
+
+    public boolean isPassEndTime(LocalDateTime now, long minute) {
+        Duration duration = Duration.between(now, endTime);
+        long minutesDifference = Math.abs(duration.toMinutes());
+
+        return minutesDifference >= minute;
     }
 }

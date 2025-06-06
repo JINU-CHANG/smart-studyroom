@@ -1,4 +1,4 @@
 package com.iot.smartstudyroom.service;
 
-public record InvalidUsageCheckRequest() {
+public record InvalidUsageCheckRequest(Integer seatId, Integer sensorValue) {
 }
