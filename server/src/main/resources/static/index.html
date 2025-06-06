@@ -20,14 +20,30 @@
             padding: 10px;
             border: 1px dashed #888;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-<h1>스터디 카페</h1>
+<h1>📚스터디 카페 📚</h1>
 
-<div id="roomContainer"></div>
-<div id="seatContainer"></div>
-<div id="infoContainer" class="info-box"></div>
+<!-- 로그인 화면 -->
+<div id="loginPage" class="login-container">
+    <h2>로그인</h2>
+    <input id="id" placeholder="아이디" />
+    <input id="password" placeholder="비밀번호" />
+    <button onclick="login()">로그인</button>
+</div>
+
+<!-- 예약 화면 -->
+<div id="mainPage" class="hidden">
+    <h2>좌석 이용 현황</h2>
+    <div id="welcomeMessage" style="margin-bottom: 20px; font-weight: bold;"></div>
+    <div id="roomContainer"></div>
+    <div id="seatContainer"></div>
+    <div id="infoContainer" class="info-box"></div>
+</div>
 
 <script>
     const data = [
@@ -46,6 +62,40 @@
             ]
         }
     ];
+
+    function login() {
+        const id = document.getElementById("id").value.trim();
+        const password = document.getElementById("password").value;
+
+        const payload = {
+            id: id,
+            password: password
+        };
+
+        fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("로그인 실패");
+                return response.text();
+            })
+            .then(() => {
+                localStorage.setItem("memberId", id);
+                document.getElementById("loginPage").classList.add("hidden");
+                document.getElementById("mainPage").classList.remove("hidden");
+
+                const welcome = document.getElementById("welcomeMessage");
+                welcome.textContent = `환영합니다! ${id} 님`;
+            })
+            .catch(error => {
+                alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+                console.error(error);
+            });
+    }
 
     const roomContainer = document.getElementById("roomContainer");
     const seatContainer = document.getElementById("seatContainer");
@@ -96,15 +146,33 @@
         }
 
         const seat = data[roomIndex].seats[seatIndex];
-        console.log("예약 완료:", {
-            room: data[roomIndex].name,
-            seat: seat.name,
-            startTime: start,
-            endTime: end
-        });
+        const today = new Date().toISOString().split("T")[0];
+        const memberId = localStorage.getItem("memberId");
 
-        infoContainer.innerHTML = `<strong>${seat.name}</strong> 예약 완료<br/>
-        시작: ${start}<br/>종료: ${end}`;
+        const payload = {
+            memberId: memberId,
+            seatId: seatIndex + 1,
+            startTime: `${today}T${start}`,
+            endTime: `${today}T${end}`
+        };
+
+        fetch("/reserve", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        }).then(response => {
+                if (!response.ok) throw new Error("예약 실패");
+                return response.text();
+            })
+            .then(() => {
+                infoContainer.innerHTML = `<strong>${seat.name}</strong> 예약 완료<br/>
+                시작: ${start}<br/>종료: ${end}`;
+            })
+            .catch(error => {
+                alert("예약 요청 중 오류 발생: " + error.message);
+            });
     }
 </script>
 </body>
